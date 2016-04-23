@@ -9,12 +9,12 @@
         <scene sceneID="vuq-3g-85C">
             <objects>
                 <tableViewController id="tt7-ef-VJG" customClass="TVC" customModule="BibliotecaISBN" customModuleProvider="target" sceneMemberID="viewController">
-                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" id="qty-ay-zKc">
+                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="49" sectionHeaderHeight="28" sectionFooterHeight="28" id="qty-ay-zKc">
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <prototypes>
-                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="Cell" id="tvo-ab-fF3">
+                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="none" indentationWidth="10" reuseIdentifier="Cell" rowHeight="49" id="tvo-ab-fF3" customClass="LibroTableViewCell" customModule="BibliotecaISBN" customModuleProvider="target">
                                 <rect key="frame" x="0.0" y="92" width="600" height="44"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="tvo-ab-fF3" id="xwd-I3-XbQ">
@@ -34,19 +34,35 @@
                     <navigationItem key="navigationItem" id="bMF-Av-4Ut">
                         <barButtonItem key="leftBarButtonItem" systemItem="add" id="Yc8-UW-Q1P">
                             <connections>
-                                <segue destination="Fea-PG-g21" kind="show" identifier="datosBusqueda" id="qan-hc-TqG"/>
+                                <segue destination="lvm-RQ-9wv" kind="show" identifier="AddItem" id="z5J-p4-nv6"/>
                             </connections>
                         </barButtonItem>
                     </navigationItem>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="F3E-R8-RrU" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="951" y="383"/>
+            <point key="canvasLocation" x="742.5" y="383"/>
         </scene>
-        <!--Libro-->
+        <!--Navigation Controller-->
+        <scene sceneID="YHt-YW-PDQ">
+            <objects>
+                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="lvm-RQ-9wv" sceneMemberID="viewController">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="ao2-xf-n7O">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <connections>
+                        <segue destination="Fea-PG-g21" kind="relationship" relationship="rootViewController" id="212-VU-xxR"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="tEk-fe-HaT" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1519.5" y="47"/>
+        </scene>
+        <!--Buscar Libro-->
         <scene sceneID="FX4-zQ-24c">
             <objects>
-                <viewController id="Fea-PG-g21" customClass="Libro" customModule="BibliotecaISBN" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="Fea-PG-g21" customClass="BuscarLibro" customModule="BibliotecaISBN" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="X2q-yI-ts5"/>
                         <viewControllerLayoutGuide type="bottom" id="7uv-U5-zBt"/>
@@ -72,7 +88,8 @@
                                     <rect key="frame" x="66" y="123" width="268" height="30"/>
                                 </variation>
                                 <connections>
-                                    <action selector="Busqueda:" destination="Fea-PG-g21" eventType="editingDidEndOnExit" id="Dpg-A9-dmd"/>
+                                    <action selector="BuscarLibro:" destination="Fea-PG-g21" eventType="editingDidEndOnExit" id="C5o-RJ-x7O"/>
+                                    <action selector="goBack" destination="DnQ-Ri-5OD" eventType="editingDidEnd" id="CnH-OE-Fca"/>
                                 </connections>
                             </textField>
                             <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="e9y-oh-d9o">
@@ -164,16 +181,30 @@
                             </mask>
                         </variation>
                     </view>
+                    <navigationItem key="navigationItem" id="aRI-W1-Bss">
+                        <barButtonItem key="leftBarButtonItem" title="Cancelar" id="Zat-d5-Xqr">
+                            <connections>
+                                <action selector="Cancelar:" destination="Fea-PG-g21" id="rfm-Yy-WIb"/>
+                            </connections>
+                        </barButtonItem>
+                        <barButtonItem key="rightBarButtonItem" title="Agregar" id="Fju-Yl-YEs">
+                            <connections>
+                                <segue destination="9CW-uq-pXl" kind="unwind" unwindAction="agregarLibro:" id="M3r-ZL-rNS"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
                     <connections>
-                        <outlet property="imagenPortada" destination="e9y-oh-d9o" id="UQ9-za-rJZ"/>
                         <outlet property="noImagen" destination="nmY-Fe-UbT" id="aWK-Vb-KaN"/>
                         <outlet property="nombreAutores" destination="X6E-yk-bvC" id="YZV-jN-oKi"/>
+                        <outlet property="portada" destination="e9y-oh-d9o" id="Hz7-Gf-CYg"/>
+                        <outlet property="save" destination="Fju-Yl-YEs" id="1yf-hO-sc1"/>
                         <outlet property="tituloLibro" destination="mwl-Ib-GiD" id="gO3-GD-7Vw"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="DnQ-Ri-5OD" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <exit id="9CW-uq-pXl" userLabel="Exit" sceneMemberID="exit"/>
             </objects>
-            <point key="canvasLocation" x="1723.5" y="63"/>
+            <point key="canvasLocation" x="2293.5" y="383"/>
         </scene>
         <!--Vista Detalle-->
         <scene sceneID="HZc-Hn-7VW">
@@ -187,24 +218,6 @@
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Autores" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Y6F-Vr-1dc">
-                                <rect key="frame" x="-42" y="-21" width="42" height="21"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
-                                <nil key="highlightedColor"/>
-                                <variation key="widthClass=compact" fixedFrame="YES">
-                                    <rect key="frame" x="170" y="240" width="60" height="21"/>
-                                </variation>
-                            </label>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Portada" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="RzG-Ln-wAl">
-                                <rect key="frame" x="-42" y="-21" width="42" height="21"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
-                                <nil key="highlightedColor"/>
-                                <variation key="widthClass=compact" fixedFrame="YES">
-                                    <rect key="frame" x="169" y="355" width="61" height="21"/>
-                                </variation>
-                            </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Título" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ziG-5y-w2c">
                                 <rect key="frame" x="-42" y="-21" width="42" height="21"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
@@ -214,30 +227,47 @@
                                     <rect key="frame" x="109" y="128" width="181" height="60"/>
                                 </variation>
                             </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="top" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Autores" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Y6F-Vr-1dc">
+                                <rect key="frame" x="-42" y="-21" width="42" height="21"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                <nil key="highlightedColor"/>
+                                <variation key="widthClass=compact" fixedFrame="YES">
+                                    <rect key="frame" x="94" y="230" width="210" height="83"/>
+                                </variation>
+                            </label>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="DefoultImage" translatesAutoresizingMaskIntoConstraints="NO" id="Ov3-RR-MG0">
+                                <rect key="frame" x="0.0" y="0.0" width="240" height="128"/>
+                                <variation key="widthClass=compact" fixedFrame="YES">
+                                    <rect key="frame" x="79" y="333" width="240" height="219"/>
+                                </variation>
+                            </imageView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <variation key="default">
                             <mask key="subviews">
-                                <exclude reference="Y6F-Vr-1dc"/>
-                                <exclude reference="RzG-Ln-wAl"/>
                                 <exclude reference="ziG-5y-w2c"/>
+                                <exclude reference="Y6F-Vr-1dc"/>
+                                <exclude reference="Ov3-RR-MG0"/>
                             </mask>
                         </variation>
                         <variation key="widthClass=compact">
                             <mask key="subviews">
-                                <include reference="Y6F-Vr-1dc"/>
-                                <include reference="RzG-Ln-wAl"/>
                                 <include reference="ziG-5y-w2c"/>
+                                <include reference="Y6F-Vr-1dc"/>
+                                <include reference="Ov3-RR-MG0"/>
                             </mask>
                         </variation>
                     </view>
                     <connections>
                         <outlet property="Titulo" destination="ziG-5y-w2c" id="aZ2-5a-DdW"/>
+                        <outlet property="autores" destination="Y6F-Vr-1dc" id="iD5-A4-XRB"/>
+                        <outlet property="portada" destination="Ov3-RR-MG0" id="FqX-vy-VYj"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="xS1-fp-Wqo" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1723.5" y="735"/>
+            <point key="canvasLocation" x="1519.5" y="708"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="loO-jt-t1z">
@@ -256,4 +286,7 @@
             <point key="canvasLocation" x="21" y="383"/>
         </scene>
     </scenes>
+    <resources>
+        <image name="DefoultImage" width="540" height="540"/>
+    </resources>
 </document>

@@ -10,14 +10,20 @@ import UIKit
 
 class vistaDetalle: UIViewController {
     
+    var libro : Libro? = nil
     
-    var tituloLibro = ""
 
     @IBOutlet weak var Titulo: UILabel!
+    @IBOutlet weak var autores: UILabel!
+    @IBOutlet weak var portada: UIImageView!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
+        self.Titulo.text = self.libro?.nombre
+        self.autores.text = self.libro?.autores
+        self.portada.image = self.libro?.imagen
         
-        Titulo.text = tituloLibro
+        
 
         // Do any additional setup after loading the view.
     }

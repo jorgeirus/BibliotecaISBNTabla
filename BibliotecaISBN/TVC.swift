@@ -10,15 +10,18 @@ import UIKit
 
 class TVC: UITableViewController {
     
-    var isbn:String = ""
-    
-    private var libros: Array<Array<String>> = Array<Array<String>>()
+    var libros: Array<Libro> = Array<Libro>()
     
 
     override func viewDidLoad() {
         super.viewDidLoad()
         self.title = "Bibloteca.org"
-        self.libros.append(["Libro1"])
+        
+        if libros.count != 0 {
+            
+        }else{
+            print("No hay libros")
+        }
         
 
         // Uncomment the following line to preserve selection between presentations
@@ -43,18 +46,19 @@ class TVC: UITableViewController {
 
     override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         // #warning Incomplete implementation, return the number of rows
-        return self.libros.count
+        return libros.count
     }
 
-    
+  
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCellWithIdentifier("Cell", forIndexPath: indexPath)
-
-        // Configure the cell...
-        cell.textLabel?.text = self.libros[indexPath.row][0]
+        
+        let libro = libros[indexPath.row]
+        cell.textLabel!.text = libro.nombre
+        cell.imageView?.image = libro.imagen
+        
         return cell
     }
-    
 
     /*
     // Override to support conditional editing of the table view.
@@ -97,17 +101,25 @@ class TVC: UITableViewController {
     // In a storyboard-based application, you will often want to do a little preparation before navigation
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
         if segue.identifier == "detalle"{
-            if let destination = segue.destinationViewController as? vistaDetalle {
-                
-                let path = tableView.indexPathForSelectedRow
-                let cell = tableView.cellForRowAtIndexPath(path!)
-                destination.tituloLibro = (cell?.textLabel?.text)!
-            }
+            let sv = segue.destinationViewController as! vistaDetalle
+            sv.libro = self.libros[(self.tableView.indexPathForSelectedRow?.row)!]
+        }else if segue.identifier == "AddItem"{
+            print("Agregar Libro")
         }
         
         
         // Get the new view controller using segue.destinationViewController.
         // Pass the selected object to the new view controller.
+    }
+    
+    func agregarLibro(sender: UIStoryboardSegue){
+        if let sourceViewController = sender.sourceViewController as?
+            BuscarLibro, libro = sourceViewController.libro{
+            // Agrega un nuevo libro.
+            let newIndexPath = NSIndexPath(forRow: libros.count, inSection: 0)
+            libros.append(libro)
+            tableView.insertRowsAtIndexPaths([newIndexPath], withRowAnimation: .Bottom)
+        }
     }
 
 

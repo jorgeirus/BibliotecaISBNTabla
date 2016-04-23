@@ -9,20 +9,42 @@
 import UIKit
 
 
-class Libro: UIViewController {
+class BuscarLibro: UIViewController, UITextFieldDelegate {
     
     
     
     @IBOutlet weak var tituloLibro: UILabel!
     @IBOutlet weak var nombreAutores: UILabel!
-    @IBOutlet weak var imagenPortada: UIImageView!
+    @IBOutlet weak var portada: UIImageView!
     @IBOutlet weak var noImagen: UILabel!
-    @IBAction func Busqueda(sender: UITextField) {
-        busquedaLibro(sender.text!)
+    @IBOutlet weak var save: UIBarButtonItem!
+    
+    var libro:Libro?
+    
+    
+    @IBAction func BuscarLibro(sender: AnyObject) {
+        
+        if sender.text != ""{
+            busquedaLibro(sender.text!)
+        }else{
+            let alerta = UIAlertController(title: "Por favor digite un ISBN",
+                                           message: "El campo no puede estar vacio",
+                                           preferredStyle: UIAlertControllerStyle.Alert)
+            
+            let accion2 = UIAlertAction(title: "OK",
+                                        style: UIAlertActionStyle.Cancel)
+            {
+                _ in
+            }
+            alerta.addAction(accion2)
+            self.presentViewController(alerta, animated: true, completion: nil)
+        }
     }
+    
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
 
         // Do any additional setup after loading the view.
     }
@@ -40,9 +62,6 @@ class Libro: UIViewController {
         let url = NSURL(string: urls + isbn)
         let datos = NSData(contentsOfURL: url!)
         let validar = NSString(data: datos!, encoding:NSUTF8StringEncoding)
-        
-        
-        
         if validar == "{}"{
             let alerta = UIAlertController(title: "ISBN incorrecto",
                                            message: "No encontramos el libro",
@@ -60,11 +79,13 @@ class Libro: UIViewController {
             
         }else{
             do {
+                var titulo: String = ""
+                var nombresAutores: String = ""
+                var imagenPortada = UIImage()
                 let json = try NSJSONSerialization.JSONObjectWithData(datos!, options: NSJSONReadingOptions.MutableLeaves) as! NSDictionary
                 let isbn1 = json["ISBN:\(ISBN)"] as! NSDictionary!
-                let titulo = isbn1["title"] as! NSString as String
+                titulo = isbn1["title"] as! NSString as String
                 tituloLibro.text = titulo
-                var nombresAutores: String = ""
                 if let autores =  isbn1["authors"] as? NSArray{
                     for autor in autores{
                         if let nombre = autor["name"] as? String{
@@ -72,34 +93,48 @@ class Libro: UIViewController {
                                 nombresAutores = nombresAutores + ", "
                             }
                             nombresAutores = nombresAutores + (nombre)
+                            nombreAutores.text = nombresAutores
                         }
                     }
                     
                 }else{
                     nombreAutores.text = "no hay autor"
                 }
-                nombreAutores.text = nombresAutores
-                if let portada = isbn1["cover"] as! NSDictionary!{
-                    let img_urls = portada["medium"] as! String
+                if let img = isbn1["cover"] as! NSDictionary!{
+                    let img_urls = img["medium"] as! String
                     let img_url = NSURL(string: img_urls)
-                    let img_datos = NSData(contentsOfURL: img_url!)
-                    if let imagen = UIImage(data: img_datos!){
-                        imagenPortada.image = imagen
+                    if let img_datos = NSData(contentsOfURL: img_url!){
+                        imagenPortada = UIImage(data: img_datos)!
+                        portada.image = imagenPortada
+                    }else{
+                        portada.image = UIImage(named: "DefoultImage")
                     }
-                }else{
-                    noImagen.text = "No tiene Portada"
+
                 }
                 
-            }
-            catch _{
+                libro = Libro(nombre: titulo, autores: nombresAutores, imagen: imagenPortada)
+                print(libro?.nombre)
+                print(libro?.autores)
+            
+            }catch _{
                 print("Los datos en JSON son incorrectos")
             }
-            
         }
     }
-
+    
     
 
+    @IBAction func Cancelar(sender: UIBarButtonItem) {
+        // Depending on style of presentation (modal or push presentation), this view controller needs to be dismissed in two different ways.
+        let isPresentingInAddMealMode = presentingViewController is UINavigationController
+        
+        if isPresentingInAddMealMode {
+            dismissViewControllerAnimated(true, completion: nil)
+        } else {
+            navigationController!.popViewControllerAnimated(true)
+        }
+
+    }
     
     // MARK: - Navigation
 
@@ -107,14 +142,13 @@ class Libro: UIViewController {
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
         // Get the new view controller using segue.destinationViewController.
         // Pass the selected object to the new view controller.
-        if segue.identifier == "datosBusqueda" {
-            if let destination = segue.destinationViewController as? TVC {
-                destination.isbn = sender!.text
-                print(sender!.text!)
-            }
+        if save === sender{
+            
+            print("Libro Agregado")
+            
+            
         }
         
     }
     
-
 }
