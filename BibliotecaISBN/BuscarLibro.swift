@@ -61,6 +61,9 @@ class BuscarLibro: UIViewController, UITextFieldDelegate {
         let urls = "https://openlibrary.org/api/books?jscmd=data&format=json&bibkeys=ISBN:"
         let url = NSURL(string: urls + isbn)
         let datos = NSData(contentsOfURL: url!)
+        
+        if datos != nil{
+            
         let validar = NSString(data: datos!, encoding:NSUTF8StringEncoding)
         if validar == "{}"{
             let alerta = UIAlertController(title: "ISBN incorrecto",
@@ -119,6 +122,20 @@ class BuscarLibro: UIViewController, UITextFieldDelegate {
             }catch _{
                 print("Los datos en JSON son incorrectos")
             }
+        }
+        }else{
+            let alerta = UIAlertController(title: "Error: Sin Conexión",
+                                           message: "Verifique si tiene conexión a internet",
+                                           preferredStyle: UIAlertControllerStyle.Alert)
+            
+            let accion2 = UIAlertAction(title: "OK",
+                                        style: UIAlertActionStyle.Cancel)
+            {
+                _ in
+            }
+            alerta.addAction(accion2)
+            self.presentViewController(alerta, animated: true, completion: nil)
+
         }
     }
     

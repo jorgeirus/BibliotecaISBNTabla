@@ -115,10 +115,12 @@ class TVC: UITableViewController {
     func agregarLibro(sender: UIStoryboardSegue){
         if let sourceViewController = sender.sourceViewController as?
             BuscarLibro, libro = sourceViewController.libro{
-            // Agrega un nuevo libro.
-            let newIndexPath = NSIndexPath(forRow: libros.count, inSection: 0)
-            libros.append(libro)
-            tableView.insertRowsAtIndexPaths([newIndexPath], withRowAnimation: .Bottom)
+            
+                // Agrega un nuevo libro.
+                let newIndexPath = NSIndexPath(forRow: libros.count, inSection: 0)
+                libros.append(libro)
+                tableView.insertRowsAtIndexPaths([newIndexPath], withRowAnimation: .Bottom)
+            
         }
     }
 
