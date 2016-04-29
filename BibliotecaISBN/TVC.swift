@@ -7,21 +7,33 @@
 //
 
 import UIKit
+import CoreData
 
 class TVC: UITableViewController {
     
     var libros: Array<Libro> = Array<Libro>()
+    var contexto: NSManagedObjectContext? = nil
     
 
     override func viewDidLoad() {
         super.viewDidLoad()
         self.title = "Bibloteca.org"
-        
-        if libros.count != 0 {
-            
-        }else{
-            print("No hay libros")
-        }
+        self.contexto = (UIApplication.sharedApplication().delegate as! AppDelegate).managedObjectContext
+        let libroEntidad = NSEntityDescription.entityForName("Libro", inManagedObjectContext: self.contexto!)
+        let peticion = libroEntidad?.managedObjectModel.fetchRequestTemplateForName("petLibros")
+        do{
+            let librosEntidades = try self.contexto?.executeFetchRequest(peticion!)
+            for libro in librosEntidades!{
+                let titulo = libro.valueForKey("titulo") as! String
+                let autor = libro.valueForKey("autor") as! String
+                var imagenPortada = UIImage()
+                if libro.valueForKey("portada") != nil {
+                    imagenPortada = UIImage(data: libro.valueForKey("portada") as! NSData)!
+                }
+                
+                self.libros.append(Libro(nombre: titulo, autores: autor, imagen: imagenPortada))
+            }
+        }catch{}
         
 
         // Uncomment the following line to preserve selection between presentations

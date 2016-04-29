@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import CoreData
 
 
 class BuscarLibro: UIViewController, UITextFieldDelegate {
@@ -20,12 +21,15 @@ class BuscarLibro: UIViewController, UITextFieldDelegate {
     @IBOutlet weak var save: UIBarButtonItem!
     
     var libro:Libro?
+    var contexto: NSManagedObjectContext? = nil
     
+
     
     @IBAction func BuscarLibro(sender: AnyObject) {
         
         if sender.text != ""{
-            busquedaLibro(sender.text!)
+        busquedaLibro(sender.text!)
+            
         }else{
             let alerta = UIAlertController(title: "Por favor digite un ISBN",
                                            message: "El campo no puede estar vacio",
@@ -44,6 +48,7 @@ class BuscarLibro: UIViewController, UITextFieldDelegate {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        self.contexto = (UIApplication.sharedApplication().delegate as! AppDelegate).managedObjectContext
         
 
         // Do any additional setup after loading the view.
@@ -55,7 +60,20 @@ class BuscarLibro: UIViewController, UITextFieldDelegate {
     }
     
     func busquedaLibro(isbn: String){
+        let libroEntidad = NSEntityDescription.entityForName("Libro", inManagedObjectContext: self.contexto!)
+        let peticion = libroEntidad?.managedObjectModel.fetchRequestFromTemplateWithName("petISBN", substitutionVariables: ["isbn": isbn])
         
+        do{
+            let libroEntidad2 = try self.contexto?.executeFetchRequest(peticion!)
+            if libroEntidad2?.count > 0{
+                let libroResultado = libroEntidad2![0]
+                print(libroResultado)
+                return
+            }
+            
+        }
+        catch{}
+
         
         let ISBN:String = isbn
         let urls = "https://openlibrary.org/api/books?jscmd=data&format=json&bibkeys=ISBN:"
@@ -87,6 +105,7 @@ class BuscarLibro: UIViewController, UITextFieldDelegate {
                 var imagenPortada = UIImage()
                 let json = try NSJSONSerialization.JSONObjectWithData(datos!, options: NSJSONReadingOptions.MutableLeaves) as! NSDictionary
                 let isbn1 = json["ISBN:\(ISBN)"] as! NSDictionary!
+                
                 titulo = isbn1["title"] as! NSString as String
                 tituloLibro.text = titulo
                 if let autores =  isbn1["authors"] as? NSArray{
@@ -113,6 +132,18 @@ class BuscarLibro: UIViewController, UITextFieldDelegate {
                         portada.image = UIImage(named: "DefoultImage")
                     }
 
+                }
+                let nuevoLibroEntidad = NSEntityDescription.insertNewObjectForEntityForName("Libro", inManagedObjectContext: self.contexto!)
+                nuevoLibroEntidad.setValue(nombresAutores, forKey: "autor")
+                nuevoLibroEntidad.setValue(isbn, forKey: "isbn")
+                nuevoLibroEntidad.setValue(UIImagePNGRepresentation(imagenPortada), forKey: "portada")
+                nuevoLibroEntidad.setValue(titulo, forKey: "titulo")
+                
+                
+                do{
+                   try self.contexto?.save()
+                }catch{
+                    
                 }
                 
                 libro = Libro(nombre: titulo, autores: nombresAutores, imagen: imagenPortada)
@@ -162,6 +193,8 @@ class BuscarLibro: UIViewController, UITextFieldDelegate {
         if save === sender{
             
             print("Libro Agregado")
+            let sigVista = segue.destinationViewController as! TVC
+            sigVista.contexto = self.contexto
             
             
         }
